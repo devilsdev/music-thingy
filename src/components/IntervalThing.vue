@@ -6,9 +6,11 @@
     <button @click="playSoundInRythm">Play</button>
     <button @click="stop">Stop</button>
 
-    <div v-for="section in sections" :key="section" style="display: flex;">
-      <div v-for="sound in section" :key="sound.name" >
-          {{ sound.name }} : <input type="checkbox" v-model="sound.checked" />
+    <div style="height: 500px; width: 100%; display: flex; flex-direction: row; margin: 0 auto; width: 50%;">
+      <div v-for="section in sections" :key="section" style="display: flex; flex-direction: column; flex-wrap: wrap; margin-left: 50px; margin: 0 auto; margin-top: 80px;">
+        <div v-for="sound in section" :key="sound.name" >
+            {{ sound.name }} : <input type="checkbox" v-model="sound.checked" style="display: flex;"/>
+        </div>
       </div>
     </div>
 
@@ -40,17 +42,17 @@ export default {
             checked: false
           },
           {
-            name: 'Kick2',
-            sound: require('./Kick 1.wav'),
+            name: 'Hat',
+            sound: require('./Open Hat 2.wav'),
             checked: false
           },
           {
-            name: 'Clap2',
-            sound: require('./Clap 1.wav'),
+            name: 'Snare',
+            sound: require('./Snare 2.wav'),
             checked: false
           }
         ], [
-          {
+                    {
             name: 'Kick',
             sound: require('./Kick 1.wav'),
             checked: false
@@ -61,17 +63,17 @@ export default {
             checked: false
           },
           {
-            name: 'Kick2',
-            sound: require('./Kick 1.wav'),
+            name: 'Hat',
+            sound: require('./Open Hat 2.wav'),
             checked: false
           },
           {
-            name: 'Clap2',
-            sound: require('./Clap 1.wav'),
+            name: 'Snare',
+            sound: require('./Snare 2.wav'),
             checked: false
           }
         ], [
-          {
+                    {
             name: 'Kick',
             sound: require('./Kick 1.wav'),
             checked: false
@@ -82,17 +84,17 @@ export default {
             checked: false
           },
           {
-            name: 'Kick2',
-            sound: require('./Kick 1.wav'),
+            name: 'Hat',
+            sound: require('./Open Hat 2.wav'),
             checked: false
           },
           {
-            name: 'Clap2',
-            sound: require('./Clap 1.wav'),
+            name: 'Snare',
+            sound: require('./Snare 2.wav'),
             checked: false
-          }          
+          }
         ], [
-          {
+                    {
             name: 'Kick',
             sound: require('./Kick 1.wav'),
             checked: false
@@ -103,15 +105,15 @@ export default {
             checked: false
           },
           {
-            name: 'Kick2',
-            sound: require('./Kick 1.wav'),
+            name: 'Hat',
+            sound: require('./Open Hat 2.wav'),
             checked: false
           },
           {
-            name: 'Clap2',
-            sound: require('./Clap 1.wav'),
+            name: 'Snare',
+            sound: require('./Snare 2.wav'),
             checked: false
-          }          
+          }
         ]
         
       ],
@@ -143,6 +145,7 @@ export default {
     },
     stop () {
       this.isPlaying = false
+      this.currentSection = 0
       clearTimeout(this.soundTimeOut)
     }
   }
