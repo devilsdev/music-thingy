@@ -7,25 +7,25 @@
       <input type="range" min="30" max="200" class="slider" v-model="bpm">
     </header>
 
-
-    <div class="musicLayout">
+    <main class="musicLayout">
       <div class="musicGrid">
-        <div v-for="index in 4" :key="index">
-          <div v-for="sound in sounds" :key="sound.name">
-            <sound-box soundFile="sound"></sound-box>
+        <div v-for="(section, index) in sections" :key="index">
+          <div v-for="(sound, index) in section" :key="index">
+            <sound-box 
+              :soundFile="sound" 
+              @fireEvent="sound = $event"
+            />
           </div>
         </div>
       </div>
-    </div>
+    </main>
 
     <footer>
       <label> 
-        <div class="playButton" @click="playSoundInRythm">
-          <span v-if="isPlaying">||</span>
-          <span v-else>></span>
-          <span>Play/Pause</span>
+        <div class="playStopButton">
+          <span v-if="isPlaying" @click="stop">|| Pause</span>
+          <span v-else @click="playSoundInRythm">> Play</span>
         </div>
-        
       </label>
     </footer>
 
@@ -33,7 +33,9 @@
 </template>
 
 <script>
+import _ from 'lodash'; 
 import SoundBox from './SoundBox'
+
 export default {
   name: 'IntervalThing',
   components: {
@@ -41,59 +43,93 @@ export default {
   },
   data () {
     return {
-      currentSection: 0,
-      sounds: {
-        kick: {
+      sounds: [
+        {
+          id: null,
           name: 'Kick',
-          sound: require('./Kick 1.wav')
+          sound: require('./Kick 1.wav'),
+          isActive: false,
+          isPlayed: false
         },
-        clap: {
+        {
+          id: null,
           name: 'Clap',
-          sound: require('./Clap 1.wav')
+          sound: require('./Clap 1.wav'),
+          isActive: false,
+          isPlayed: false
         },
-        hat: {
+        {
+          id: null,
           name: 'Hat',
-          sound: require('./Open Hat 2.wav')
+          sound: require('./Open Hat 2.wav'),
+          isActive: false,
+          isPlayed: false
         },
-        snare: {
+        {
+          id: null,
           name: 'Snare',
-          sound: require('./Snare 2.wav')
+          sound: require('./Snare 2.wav'),
+          isActive: false,
+          isPlayed: false
         }
-      },
-      sections: [
       ],
       title: 'Music Thing',
       bpm: 124,
       isPlaying: false,
-      soundTimeOut: null
+      soundTimeOut: null,
+      currentSection: 0,
+      sections: []
     }
   },
   computed: {
     rythmTime: function () {
       return (60 / this.bpm) * 1000
-    },
+    }
   },
   methods: {
     playSoundInRythm () {
-      this.isPlaying = !this.isPlaying
-      if(!this.isPlaying) {
-        console.log(this.currentSection)
-        this.sections[this.currentSection].forEach(el => {
-          if(el.checked)
-            new Audio(el.sound).play()
-        })
-        this.currentSection += 1
-        
-        if(this.currentSection > 3)
-          this.currentSection = 0
-        this.soundTimeOut = setTimeout(this.playSoundInRythm, this.rythmTime)      
-      }
+      this.isPlaying = true
+
+      if(this.currentSection > 3)
+        this.currentSection = 0
+      
+      let currentSounds = this.sections[this.currentSection]
+      currentSounds.forEach(sound => {
+        if(sound.isActive) {
+          sound.isPlayed = true
+          new Audio(sound.sound).play()
+          setTimeout(() => sound.isPlayed = false, 130)
+        }
+
+      })
+
+      this.currentSection++
+      this.soundTimeOut = setTimeout(this.playSoundInRythm, this.rythmTime) 
     },
     stop () {
       this.isPlaying = false
       this.currentSection = 0
       clearTimeout(this.soundTimeOut)
+    },
+    createSections () {
+      // create 4 sections of the sounds array
+      // each one has to be a deep clone of the array
+      // for this, we will use lodash
+      // i will refactor this later (sure i will ... :))
+      const sec1 = [...this.sounds]
+      let copy1 = _.map(this.sounds, _.clone)
+      let copy2 = _.map(this.sounds, _.clone);
+      let copy3 = _.map(this.sounds, _.clone);
+      let copy4 = _.map(this.sounds, _.clone);
+      copy1.forEach(sound => sound.id = Math.random())
+      copy2.forEach(sound => sound.id = Math.random())
+      copy3.forEach(sound => sound.id = Math.random())
+      copy4.forEach(sound => sound.id = Math.random())
+      this.sections.push(copy1, copy2, copy3, copy4)
     }
+  },
+  mounted () {
+    this.createSections()
   }
 }
 </script>
@@ -108,6 +144,7 @@ export default {
   
   align-items: start;
 }
+
 .header {
   width: 100%;
   height: 100%;
@@ -120,6 +157,7 @@ export default {
   word-spacing: 5px;
   font-weight: bold;
 }
+
 .header > label {
   width: 100%;
 }
@@ -161,6 +199,7 @@ export default {
   grid-row-start:3; 
   grid-row-end:6; 
 }
+
 .musicGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -176,10 +215,11 @@ footer {
   font-size: 37px;
 }
 
-.playButton {
+.playStopButton {
   cursor: pointer;
   user-select: none;
 }
+
 .playButton:hover{
   color: var(--mainAccentColor);
 }

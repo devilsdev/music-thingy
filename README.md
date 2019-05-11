@@ -1,6 +1,6 @@
 # music-thing
 
-> A Vue.js project
+> A thing to make beats with
 
 ## Build Setup
 
