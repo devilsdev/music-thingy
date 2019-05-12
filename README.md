@@ -2,6 +2,8 @@
 
 > A thing to make beats with
 
+![Music Thing](./static/music-thing.gif)
+
 ## Build Setup
 
 ``` bash

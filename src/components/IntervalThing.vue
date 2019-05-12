@@ -1,9 +1,12 @@
 <template>
   <div class="appGrid">
     <header class="header">
-      <label for="bpmText">
-        {{ bpm }} BPM 
-      </label>
+      <p>
+        <span class="bpmText">BPM</span>
+        <span class="bpmVar">
+          {{ bpm }} 
+        </span>
+      </p>
       <input type="range" min="30" max="200" class="slider" v-model="bpm">
     </header>
 
@@ -100,7 +103,6 @@ export default {
           new Audio(sound.sound).play()
           setTimeout(() => sound.isPlayed = false, 130)
         }
-
       })
 
       this.currentSection++
@@ -113,19 +115,14 @@ export default {
     },
     createSections () {
       // create 4 sections of the sounds array
-      // each one has to be a deep clone of the array
-      // for this, we will use lodash
-      // i will refactor this later (sure i will ... :))
-      const sec1 = [...this.sounds]
-      let copy1 = _.map(this.sounds, _.clone)
-      let copy2 = _.map(this.sounds, _.clone);
-      let copy3 = _.map(this.sounds, _.clone);
-      let copy4 = _.map(this.sounds, _.clone);
-      copy1.forEach(sound => sound.id = Math.random())
-      copy2.forEach(sound => sound.id = Math.random())
-      copy3.forEach(sound => sound.id = Math.random())
-      copy4.forEach(sound => sound.id = Math.random())
-      this.sections.push(copy1, copy2, copy3, copy4)
+      for(let i = 0; i <= 3; i++) {
+        // each one has to be a deep clone of the array
+        // for this, we will use lodash
+        const soundsClone = _.map(this.sounds, _.clone)
+        // give each sound a random ID
+        soundsClone.forEach(sound => sound.id = Math.random())
+        this.sections.push(soundsClone)
+      }
     }
   },
   mounted () {
@@ -134,7 +131,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .appGrid {
   height: 100vh;
@@ -145,11 +141,15 @@ export default {
   align-items: start;
 }
 
+p {
+  margin: 0;padding: 0;
+}
+
 .header {
   width: 100%;
   height: 100%;
   grid-column-start:2; 
-  grid-column-end:2; 
+  grid-column-end:5; 
   grid-row-start:1; 
   grid-row-end:1; 
   text-align: left;
@@ -158,19 +158,23 @@ export default {
   font-weight: bold;
 }
 
-.header > label {
-  width: 100%;
+.bpmVar {
+  width: 300px;
+}
+
+.header > .bpmText {
+  grid-column-start: 3;
 }
 
 .slider {
   grid-column-start:2; 
-  grid-column-end:6; 
+  grid-column-end:3; 
   grid-row-start:3; 
   grid-row-end:6; 
-
+  width: 100%;
+  max-width: 350px;
   -webkit-appearance: none;  
   appearance: none;
-  width: 40vw; 
   height: 25px; 
   background: var(--mainAccentColor); 
   outline: none;
