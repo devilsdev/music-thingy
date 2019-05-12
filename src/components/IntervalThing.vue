@@ -100,7 +100,12 @@ export default {
       currentSounds.forEach(sound => {
         if(sound.isActive) {
           sound.isPlayed = true
-          new Audio(sound.sound).play()
+          
+          // create a new audio element
+          const audioElement = document.createElement('audio')
+          audioElement.src = sound.sound
+          audioElement.play()
+
           setTimeout(() => sound.isPlayed = false, 130)
         }
       })

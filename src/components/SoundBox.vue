@@ -22,7 +22,6 @@ export default {
   methods: {
     fireEvent (event) {
       this.$emit('fireEvent', this.sound)
-      console.log(this.sound)
     } 
   }
 }
