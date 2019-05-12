@@ -36,7 +36,8 @@
 </template>
 
 <script>
-import _ from 'lodash'; 
+import _ from 'lodash'
+import {Howl, Howler} from 'howler';
 import SoundBox from './SoundBox'
 
 export default {
@@ -100,12 +101,14 @@ export default {
       currentSounds.forEach(sound => {
         if(sound.isActive) {
           sound.isPlayed = true
-          
-          // create a new audio element
-          const audioElement = document.createElement('audio')
-          audioElement.src = sound.sound
-          audioElement.play()
-
+          // create a new audio with howler
+          const audio = new Howl({
+            src: [sound.sound]
+          })
+          // play the audio
+          audio.play()
+          // set isPlayed = false so the color changes
+          // back to normal again
           setTimeout(() => sound.isPlayed = false, 130)
         }
       })
