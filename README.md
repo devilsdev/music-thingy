@@ -4,6 +4,8 @@
 
 ![Music Thing](./static/music-thing.gif)
 
+ [deployed here](https://music-thingy.netlify.com)
+
 ## Build Setup
 
 ``` bash
